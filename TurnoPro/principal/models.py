@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth.models import User
+from django.conf import settings
 
 class Usuario(AbstractUser):
     ROLES = (
@@ -9,10 +10,10 @@ class Usuario(AbstractUser):
         ('empleado', 'Empleado')
     )
 
-    rol = models.CharField(max_length=20, choices=ROLES, default='empleado')
+    rol = models.CharField(max_length=20, choices=ROLES, default='Empresa')
 
 class Empresa(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='empresa')
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='empresa')
     nombre = models.CharField(max_length=100)
     nit = models.CharField(max_length=20, unique=True)
     descripcion = models.TextField(max_length=1000)
@@ -29,7 +30,7 @@ class Empleado(models.Model):
         ('F', 'Femenino'),
         ('O', 'Otro')
     )
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name='empleado')
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='empleado')
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name='empleados')
     cargo = models.CharField(max_length=100)
     fecha_ingreso = models.DateField()
@@ -52,5 +53,16 @@ class TurnosAsignados(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, related_name='turnos_asignados')
     tipo_turno = models.ForeignKey(Turno, on_delete=models.CASCADE, related_name= 'asignaciones')
     fecha = models.DateField()
+
+class Movimientos(models.Model):
+    TIPO_MOVIMIENTO = (
+        ("I", "Ingreso"),
+        ("R", "Retiro")
+    )
+    creador = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="movimiento" ,null=True,  blank=True)
+    num_identificacion = models.IntegerField()
+    nombre = models.CharField(max_length=100)
+    Tipo_movimiento = models.CharField(max_length=2, choices=TIPO_MOVIMIENTO, default=
+    "Ingreso")
 
 

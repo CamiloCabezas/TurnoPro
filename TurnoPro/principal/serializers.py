@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Empresa, Empleado, Turno, TurnosAsignados
+from .models import Usuario, Empresa, Empleado, Turno, TurnosAsignados, Movimientos
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,3 +39,8 @@ class TurnosAsignadosSerializer(serializers.ModelSerializer):
     class Meta:
         model = TurnosAsignados
         fields = ['id', 'empleado', 'tipo_turno', 'fecha']
+
+class MovimientosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movimientos
+        fields = '__all__'
