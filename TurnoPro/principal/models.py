@@ -5,7 +5,8 @@ from django.conf import settings
 
 class Usuario(AbstractUser):
     ROLES = (
-        ('admin', 'Administrador General'),
+        ('admin', '\
+         '),
         ('empresa', 'Empresa'),
         ('empleado', 'Empleado')
     )

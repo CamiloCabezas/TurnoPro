@@ -3,11 +3,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.urls import path
-from .views import get_movimientos, CustomTokenObtainPairView
+from .views import get_movimientos, CustomTokenObtainPairView, set_rol, CustomRefreshTokenView, logout, is_authenticated
 
 
 urlpatterns = [
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('movimientos/', get_movimientos)
+    path('token/refresh/', CustomRefreshTokenView.as_view(), name='token_refresh'),
+    path('movimientos/', get_movimientos),
+    path('set_rol/<int:id>/',set_rol),
+    path('logout/',logout),
+    path('isAuthenticated/', is_authenticated)
 ]
