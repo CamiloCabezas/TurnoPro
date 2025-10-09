@@ -1,11 +1,31 @@
 from rest_framework import serializers
 from .models import Usuario, Empresa, Empleado, Turno, TurnosAsignados, Movimientos
 
-class UsuarioSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.Serializer):
     class Meta:
         model = Usuario
-        fields = ['id', 'username', 'email', 'rol', 'first_name', 'last_name']
 
+
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only = True)
+    class Meta:
+        model = Usuario
+        fields = ['id','username', 'email', 'rol', 'first_name', 'last_name', 'password', 'date_joined']
+
+        def create(self, validated_data):
+            user = Usuario(
+                email =validated_data['email'],
+                first_name = validated_data['first_name'],
+                last_name = validated_data['last_name'],
+                username = validated_data['username']
+            )
+
+            user.set_password(validated_data['password'])
+            user.save()
+            return user
+        
+        
 class EmpresaSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer(read_only=True)  
 

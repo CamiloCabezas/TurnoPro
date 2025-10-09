@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from .models import Movimientos, Usuario
-from .serializers import MovimientosSerializer
+from .serializers import MovimientosSerializer, UsuarioSerializer
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -30,8 +30,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             res = Response()
 
             res.data = {"success" : True,
-                        "rol" : user.rol,
-                        "username" : user.username
+                         
                         }
 
             res.set_cookie(
@@ -108,6 +107,16 @@ def get_movimientos(request):
     return Response(serializer.data)
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    serializer = UsuarioSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+    
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsAdmin])
@@ -137,4 +146,18 @@ def set_rol(request, id):
             'rol': user.rol
         }
     }, status=200)
-        
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def delete_user(request, id):
+    try:
+        user = Usuario.objects.get(id=id)
+    except Usuario.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado'})
+
+    # Si no es admin y quiere eliminar otro usuario
+    if request.user.rol != 'admin' and request.user.id != user.id:
+        return Response({'error': 'No tienes permiso para eliminar este usuario'})
+
+    user.delete()
+    return Response({'message': 'Usuario eliminado correctamente'})
