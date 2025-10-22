@@ -10,6 +10,11 @@ class Usuario(AbstractUser):
         ('empleado', 'Empleado')
     )
 
+    # email = models.EmailField(unique=True)  
+    # rol = models.CharField(max_length=20, choices=ROLES, default='empresa')
+
+    # USERNAME_FIELD = 'email' 
+    # REQUIRED_FIELDS = ['username']  
     rol = models.CharField(max_length=20, choices=ROLES, default='Empresa')
 
 class Empresa(models.Model):

@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.urls import path
-from .views import get_movimientos, CustomTokenObtainPairView, set_rol, CustomRefreshTokenView,delete_user, logout, is_authenticated, register
+from .views import get_movimientos, CustomTokenObtainPairView, set_rol, CustomRefreshTokenView,delete_user, logout, is_authenticated, register,get_user, set_username
 
 
 urlpatterns = [
@@ -14,5 +14,7 @@ urlpatterns = [
     path('logout/',logout),
     path('isAuthenticated/', is_authenticated),
     path('register/', register), 
-    path('delete/<int:id>/', delete_user)
+    path('delete/<int:id>/', delete_user),
+    path('get_users/', get_user),
+    path("set_username/<int:id>/", set_username)
 ]

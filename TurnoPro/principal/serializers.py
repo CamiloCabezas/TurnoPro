@@ -25,7 +25,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             user.save()
             return user
         
-        
+          
 class EmpresaSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer(read_only=True)  
 
